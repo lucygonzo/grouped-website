@@ -22,7 +22,8 @@
       "Bash(git push:*)",
       "Bash(gh api:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd GitHub Pages deployment via Actions\n\n- GitHub Actions workflow builds and deploys on push to main\n- Set publicPath for GitHub Pages subdirectory routing\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Bash(claude mcp add:*)"
     ]
   }
 }
