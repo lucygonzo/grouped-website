@@ -1,0 +1,14 @@
+.growth__inner {
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.growth__title {
+  letter-spacing: -0.03em;
+}
+
+.growth__body {
+  max-width: 540px;
+}

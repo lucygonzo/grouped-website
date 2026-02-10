@@ -1,0 +1,38 @@
+.hero {
+  padding-top: calc(var(--space-6xl) + 80px);
+  padding-bottom: var(--space-5xl);
+  text-align: center;
+}
+
+.hero__content {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xl);
+}
+
+.hero__title {
+  letter-spacing: -0.03em;
+}
+
+.hero__subtitle {
+  color: var(--text-secondary);
+  max-width: 600px;
+}
+
+.hero__proof {
+  margin-top: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: calc(var(--space-4xl) + 80px);
+    text-align: left;
+  }
+
+  .hero__content {
+    align-items: flex-start;
+  }
+}

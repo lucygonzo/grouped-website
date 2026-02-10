@@ -1,0 +1,33 @@
+.card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-2xl);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.card--default:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.card--flat {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+.card--surface {
+  background-color: var(--bg-surface);
+}
+
+.card h3,
+.card h4,
+.card h5 {
+  margin-bottom: var(--space-md);
+}
+
+.card p {
+  color: var(--text-secondary);
+  line-height: var(--body-line);
+}
