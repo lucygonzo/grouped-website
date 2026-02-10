@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth status:*)",
+      "Bash(git --version:*)",
+      "Bash(brew install:*)",
+      "Bash(brew --version:*)",
+      "Bash(/opt/homebrew/bin/brew:*)",
+      "Bash(export PATH=\"/opt/homebrew/bin:$PATH\")",
+      "Bash(pdftotext:*)",
+      "Bash(xattr:*)",
+      "WebFetch(domain:www.behance.net)",
+      "WebFetch(domain:www.fontshare.com)",
+      "Bash(git init:*)",
+      "Bash(gh repo create:*)",
+      "Bash(node --version:*)",
+      "Bash(npm --version:*)",
+      "Bash(npm install:*)",
+      "Bash(npx webpack:*)",
+      "Bash(pkill:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(gh api:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd GitHub Pages deployment via Actions\n\n- GitHub Actions workflow builds and deploys on push to main\n- Set publicPath for GitHub Pages subdirectory routing\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh:*)"
+    ]
+  }
+}
