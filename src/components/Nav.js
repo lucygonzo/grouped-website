@@ -2,218 +2,176 @@ import { useState, useRef, useEffect } from 'react';
 import './Nav.css';
 import logoIcon from '../assets/images/grouped-icon.png';
 
-const DROPDOWN_ID = 'nav-resources-menu';
-const TRIGGER_ID = 'nav-resources-trigger';
+const FEATURES_ID = 'nav-features-menu';
+const ABOUT_ID = 'nav-about-menu';
+const RESOURCES_ID = 'nav-resources-menu';
 
-export default function Nav() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [resourcesExpanded, setResourcesExpanded] = useState(false);
-  const dropdownRef = useRef(null);
-  const triggerRef = useRef(null);
-  const drawerRef = useRef(null);
-  const hamburgerRef = useRef(null);
+const FEATURES_ITEMS = [
+  { label: 'Releases', href: '#releases' },
+  { label: 'Group', href: '#group' },
+  { label: 'Growth', href: '#growth' },
+];
 
-  // Close dropdown on outside click
+const ABOUT_ITEMS = [
+  { label: 'Our Story', href: '#our-story' },
+  { label: 'Our Team', href: '#our-team' },
+  { label: 'Artists', href: '#artists' },
+  { label: 'Careers', href: '#careers' },
+  { label: 'Media', href: '#media' },
+];
+
+const RESOURCES_ITEMS = [
+  { label: 'Blog', href: '#blog' },
+  { label: 'Case Studies', href: '#case-studies' },
+  { label: 'Press', href: '#press' },
+  { label: 'Contact', href: '#contact' },
+];
+
+function Dropdown({ id, triggerId, isOpen, onOpen, onClose, label, items, listRef, wrapRef }) {
+
   useEffect(() => {
-    if (!dropdownOpen) return;
+    if (!isOpen) return;
     function handleClick(e) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(e.target)
-      ) {
-        setDropdownOpen(false);
-      }
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) onClose();
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
-  }, [dropdownOpen]);
+  }, [isOpen, onClose]);
 
-  const dropdownListRef = useRef(null);
-
-  // Close dropdown on Escape
   useEffect(() => {
-    if (!dropdownOpen) return;
-    function handleKeyDown(e) {
-      if (e.key === 'Escape') {
-        setDropdownOpen(false);
-        triggerRef.current?.focus();
-      }
+    if (!isOpen) return;
+    function handleKey(e) {
+      if (e.key === 'Escape') onClose();
     }
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [dropdownOpen]);
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [isOpen, onClose]);
 
-  // Close drawer on Escape; focus trap when mobile open
+  return (
+    <div className="nav__dropdown-wrap" ref={wrapRef}>
+      <button
+        type="button"
+        id={triggerId}
+        className="nav__trigger"
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        aria-controls={id}
+        onClick={() => (isOpen ? onClose() : onOpen())}
+        onMouseEnter={onOpen}
+        onMouseLeave={onClose}
+      >
+        {label}
+        <span className="nav__chevron" aria-hidden="true">▼</span>
+      </button>
+      <ul
+        ref={listRef}
+        id={id}
+        className="nav__dropdown"
+        role="menu"
+        aria-labelledby={triggerId}
+        data-open={isOpen}
+        onMouseEnter={onOpen}
+        onMouseLeave={onClose}
+      >
+        {items.map((item) => (
+          <li key={item.href} className="nav__dropdown-item" role="none">
+            <a href={item.href} className="nav__dropdown-link" role="menuitem" onClick={onClose}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default function Nav() {
+  const [featuresOpen, setFeaturesOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const drawerRef = useRef(null);
+  const hamburgerRef = useRef(null);
+  const featuresWrapRef = useRef(null);
+  const aboutWrapRef = useRef(null);
+  const resourcesWrapRef = useRef(null);
+  const featuresListRef = useRef(null);
+  const aboutListRef = useRef(null);
+  const resourcesListRef = useRef(null);
+
   useEffect(() => {
     if (!mobileOpen) return;
-    function handleKeyDown(e) {
+    function handleKey(e) {
       if (e.key === 'Escape') {
         setMobileOpen(false);
-        setResourcesExpanded(false);
         hamburgerRef.current?.focus();
       }
     }
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
   }, [mobileOpen]);
 
-  // Focus first focusable in drawer when opening
   useEffect(() => {
     if (mobileOpen && drawerRef.current) {
-      const firstFocusable = drawerRef.current.querySelector(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      firstFocusable?.focus();
+      const first = drawerRef.current.querySelector('button, [href]');
+      first?.focus();
     }
   }, [mobileOpen]);
 
-  // Prevent body scroll when drawer open
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
-
-  const handleTriggerClick = (e) => {
-    e.preventDefault();
-    setDropdownOpen((prev) => !prev);
-  };
-
-  const handleTriggerKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      const willOpen = !dropdownOpen;
-      setDropdownOpen(willOpen);
-      if (willOpen) {
-        setTimeout(() => {
-          const firstLink = dropdownListRef.current?.querySelector('[role="menuitem"]');
-          firstLink?.focus();
-        }, 0);
-      }
-    }
-    if (e.key === 'ArrowDown' && dropdownOpen) {
-      dropdownListRef.current?.querySelector('[role="menuitem"]')?.focus();
-      e.preventDefault();
-    }
-  };
-
-  const handleDropdownKeyDown = (e) => {
-    const menu = dropdownListRef.current;
-    if (!menu) return;
-    const items = Array.from(menu.querySelectorAll('[role="menuitem"]'));
-    const currentIndex = items.indexOf(document.activeElement);
-
-    if (e.key === 'Escape') {
-      setDropdownOpen(false);
-      triggerRef.current?.focus();
-      e.preventDefault();
-      return;
-    }
-    if (e.key === 'ArrowDown' && currentIndex < items.length - 1) {
-      items[currentIndex + 1].focus();
-      e.preventDefault();
-      return;
-    }
-    if (e.key === 'ArrowUp' && currentIndex > 0) {
-      items[currentIndex - 1].focus();
-      e.preventDefault();
-      return;
-    }
-    if (e.key === 'ArrowUp' && currentIndex === 0) {
-      triggerRef.current?.focus();
-      e.preventDefault();
-      return;
-    }
-    if (e.key === 'Home') {
-      items[0]?.focus();
-      e.preventDefault();
-      return;
-    }
-    if (e.key === 'End') {
-      items[items.length - 1]?.focus();
-      e.preventDefault();
-    }
-  };
 
   const closeDrawer = () => {
     setMobileOpen(false);
-    setResourcesExpanded(false);
     hamburgerRef.current?.focus();
   };
-
-  const resourcesItems = [
-    { label: 'Case Studies', href: '#case-studies' },
-    { label: 'Contact', href: '#contact' },
-    { label: 'Careers', href: '#careers' },
-  ];
 
   return (
     <>
       <nav className="nav" aria-label="Primary navigation">
-        <div className="container">
+        <div className="nav__container">
+          {/* Desktop: left links + dropdowns */}
           <div className="nav__left">
             <div className="nav__links">
-              <a href="#features" className="nav__link">
-                Features
-              </a>
-              <a href="#about" className="nav__link">
-                About
-              </a>
-              <div className="nav__resources-wrap" ref={dropdownRef}>
-                <button
-                  ref={triggerRef}
-                  id={TRIGGER_ID}
-                  type="button"
-                  className="nav__resources-trigger"
-                  aria-haspopup="true"
-                  aria-expanded={dropdownOpen}
-                  aria-controls={DROPDOWN_ID}
-                  onClick={handleTriggerClick}
-                  onKeyDown={handleTriggerKeyDown}
-                  onMouseEnter={() => setDropdownOpen(true)}
-                  onMouseLeave={() => setDropdownOpen(false)}
-                >
-                  Resources
-                  <span className="nav__chevron" aria-hidden="true">
-                    ▼
-                  </span>
-                </button>
-                <ul
-                  ref={dropdownListRef}
-                  id={DROPDOWN_ID}
-                  className="nav__dropdown"
-                  role="menu"
-                  aria-labelledby={TRIGGER_ID}
-                  data-open={dropdownOpen}
-                  onMouseEnter={() => setDropdownOpen(true)}
-                  onMouseLeave={() => setDropdownOpen(false)}
-                  onKeyDown={handleDropdownKeyDown}
-                >
-                  {resourcesItems.map((item) => (
-                    <li key={item.href} className="nav__dropdown-item" role="none">
-                      <a
-                        href={item.href}
-                        className="nav__dropdown-link"
-                        role="menuitem"
-                        onClick={() => setDropdownOpen(false)}
-                      >
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Dropdown
+                id={FEATURES_ID}
+                triggerId="nav-features-trigger"
+                isOpen={featuresOpen}
+                onOpen={() => setFeaturesOpen(true)}
+                onClose={() => setFeaturesOpen(false)}
+                label="Features"
+                items={FEATURES_ITEMS}
+                listRef={featuresListRef}
+                wrapRef={featuresWrapRef}
+              />
+              <Dropdown
+                id={ABOUT_ID}
+                triggerId="nav-about-trigger"
+                isOpen={aboutOpen}
+                onOpen={() => setAboutOpen(true)}
+                onClose={() => setAboutOpen(false)}
+                label="About"
+                items={ABOUT_ITEMS}
+                listRef={aboutListRef}
+                wrapRef={aboutWrapRef}
+              />
+              <Dropdown
+                id={RESOURCES_ID}
+                triggerId="nav-resources-trigger"
+                isOpen={resourcesOpen}
+                onOpen={() => setResourcesOpen(true)}
+                onClose={() => setResourcesOpen(false)}
+                label="Resources"
+                items={RESOURCES_ITEMS}
+                listRef={resourcesListRef}
+                wrapRef={resourcesWrapRef}
+              />
             </div>
           </div>
 
+          {/* Center: logo */}
           <div className="nav__center">
             <a href="/" className="nav__logo">
               <img src={logoIcon} alt="Grouped" className="nav__logo-icon" />
@@ -221,15 +179,13 @@ export default function Nav() {
             </a>
           </div>
 
+          {/* Desktop: right buttons */}
           <div className="nav__right">
-            <a href="#signup" className="nav__btn nav__btn--primary">
-              Sign Up
-            </a>
-            <a href="#signin" className="nav__btn nav__btn--secondary">
-              Sign In
-            </a>
+            <a href="#signup" className="nav__btn nav__btn--primary">Sign Up</a>
+            <a href="#signin" className="nav__btn nav__btn--secondary">Sign In</a>
           </div>
 
+          {/* Mobile: hamburger (visible only on mobile) */}
           <button
             ref={hamburgerRef}
             type="button"
@@ -237,23 +193,25 @@ export default function Nav() {
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-controls="nav-drawer"
-            onClick={() => setMobileOpen((prev) => !prev)}
+            onClick={() => setMobileOpen((p) => !p)}
           >
             <span className="nav__hamburger-icon" aria-hidden="true">
-              <span />
-              <span />
-              <span />
+              <span /><span /><span />
             </span>
           </button>
+
+          {/* Mobile: Sign in only (visible only on mobile) */}
+          <div className="nav__mobile-cta">
+            <a href="#signin" className="nav__btn nav__btn--primary">Sign in</a>
+          </div>
         </div>
       </nav>
 
       {/* Mobile drawer backdrop */}
       <div
-        className="nav__drawer-backdrop"
+        className="nav__backdrop"
         data-open={mobileOpen}
         onClick={closeDrawer}
-        onKeyDown={(e) => e.key === 'Escape' && closeDrawer()}
         aria-hidden="true"
       />
 
@@ -268,65 +226,20 @@ export default function Nav() {
         aria-label="Mobile menu"
       >
         <div className="nav__drawer-header">
-          <button
-            type="button"
-            className="nav__drawer-close"
-            aria-label="Close menu"
-            onClick={closeDrawer}
-          >
+          <button type="button" className="nav__drawer-close" aria-label="Close menu" onClick={closeDrawer}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
         </div>
-        <div className="nav__drawer-links">
-          <a href="#features" className="nav__drawer-link" onClick={closeDrawer}>
-            Features
-          </a>
-          <a href="#about" className="nav__drawer-link" onClick={closeDrawer}>
-            About
-          </a>
-          <div>
-            <button
-              type="button"
-              className="nav__drawer-resources-trigger"
-              aria-expanded={resourcesExpanded}
-              aria-controls="nav-drawer-sublinks"
-              id="nav-drawer-resources"
-              onClick={() => setResourcesExpanded((prev) => !prev)}
-            >
-              Resources
-              <span className="nav__chevron" aria-hidden="true">
-                ▼
-              </span>
-            </button>
-            <div
-              id="nav-drawer-sublinks"
-              className="nav__drawer-sublinks"
-              data-expanded={resourcesExpanded}
-            >
-              <div className="nav__drawer-sublinks-inner">
-                {resourcesItems.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="nav__drawer-sublink"
-                    onClick={closeDrawer}
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
+        <div className="nav__drawer-body">
+          <a href="#features" className="nav__drawer-link" onClick={closeDrawer}>Features</a>
+          <a href="#about" className="nav__drawer-link" onClick={closeDrawer}>About</a>
+          <a href="#resources" className="nav__drawer-link" onClick={closeDrawer}>Resources</a>
+          <div className="nav__drawer-buttons">
+            <a href="#signup" className="nav__btn nav__btn--primary" onClick={closeDrawer}>Sign Up</a>
+            <a href="#signin" className="nav__btn nav__btn--secondary" onClick={closeDrawer}>Sign In</a>
           </div>
-        </div>
-        <div className="nav__drawer-buttons">
-          <a href="#signup" className="nav__btn nav__btn--primary" onClick={closeDrawer}>
-            Sign Up
-          </a>
-          <a href="#signin" className="nav__btn nav__btn--secondary" onClick={closeDrawer}>
-            Sign In
-          </a>
         </div>
       </div>
     </>
