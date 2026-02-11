@@ -4,7 +4,7 @@ import Button from '../components/Button';
 
 const features = [
   {
-    label: 'Pre-saves & Smart Links',
+    label: 'Pre-saves & Premiere Links',
     title: 'Own the first listen.',
     description: [
       'Stop sending fans to the algorithm. Build a pre-save engine that captures fans and directs them to your music on every platform.',
@@ -14,7 +14,7 @@ const features = [
     align: 'left',
   },
   {
-    label: 'Fan Pages',
+    label: 'Create moments fans brag about',
     title: 'Turn drops into shared moments that make fans feel like VIPs.',
     description: [
       'Give fans an experience, not just a link. Create beautiful, customizable fan pages for every release, tour, or moment.',

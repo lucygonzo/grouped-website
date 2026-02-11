@@ -22,9 +22,9 @@ export default function Tools() {
     <section className="tools section">
       <div className="container">
         <div className="tools__header text-center">
-          <SectionLabel>Your toolkit</SectionLabel>
+          <SectionLabel>Why we exist</SectionLabel>
           <h2 className="tools__title">
-            The tools that make<br />releases matter
+            Real talk: all music business tools weren't made for the actual artist.
           </h2>
           <p className="tools__subtitle text-secondary">
             Trade the guesswork for tools that help you build anticipation, drop with precision, and turn
