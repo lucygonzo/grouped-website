@@ -75,7 +75,7 @@ export default function Hero() {
         <div className="hero__content">
           <div className="hero__copy">
             <h1 className="hero__title">
-              <span className="hero__title-line1">The best artists don't just drop music.</span>
+              <span className="hero__title-line1">Stop dropping music into the void. Start building a fan-powered career.</span>
               <br />
               <span className="hero__title-line2">They create moments.</span>
             </h1>
