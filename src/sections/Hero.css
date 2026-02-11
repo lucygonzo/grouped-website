@@ -1,38 +1,229 @@
+/* Hero starts below nav in its own container; nav + hero = 100vh */
 .hero {
-  padding-top: calc(var(--space-6xl) + 80px);
-  padding-bottom: var(--space-5xl);
-  text-align: center;
+  position: relative;
+  margin-top: var(--nav-height);
+  background-color: #1c1e21;
+  min-height: calc(100vh - var(--nav-height));
+  padding: 48px 64px 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  overflow: hidden;
+}
+
+/* Texture overlay: 20% opacity, blends with background (not a full image) */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: var(--hero-texture);
+  background-size: cover;
+  background-position: top center;
+  opacity: 0.2;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  filter: brightness(1.05);
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* No extra horizontal padding: hero provides 64px; avoid double gutter */
+.hero .hero__inner.container {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .hero__content {
-  max-width: 900px;
+  max-width: 768px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2xl);
+  gap: 32px;
+  text-align: center;
+}
+
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 44px;
+  width: 100%;
 }
 
 .hero__title {
-  letter-spacing: -0.03em;
+  font-family: var(--font-heading);
+  font-size: 82px;
+  line-height: 84.46px;
+  letter-spacing: 0.82px;
+  color: var(--text-primary);
+}
+
+.hero__title-line1 {
+  font-size: 41px;
+  line-height: 42.23px;
+  letter-spacing: 0.41px;
+}
+
+.hero__title-line2 {
+  white-space: nowrap;
 }
 
 .hero__subtitle {
-  color: var(--text-secondary);
-  max-width: 600px;
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 32px;
+  color: var(--text-primary);
+  max-width: 100%;
 }
 
-.hero__proof {
-  margin-top: var(--space-lg);
+.hero__actions {
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Button overrides per Figma: padding, radius, font */
+.hero__actions .btn {
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+  line-height: 28.8px;
+}
+
+.hero__actions .btn--secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: transparent;
+}
+
+.hero__actions .btn--secondary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: transparent;
+}
+
+/* Collage: 8 images positioned around content (above texture overlay) */
+.hero__collage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero__collage-item {
+  position: absolute;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  pointer-events: auto;
+}
+
+.hero__collage-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Figma collage: 1657.57×900 canvas; positions/sizes as % for responsiveness */
+.hero__collage-item--top-left {
+  left: 15.89%;
+  top: -10%;
+  width: 15.69%;
+  height: 19.22%;
+}
+
+.hero__collage-item--top-center {
+  left: 62.82%;
+  top: -10%;
+  width: 13.88%;
+  height: 25.56%;
+  transform: translateX(-50%);
+}
+
+.hero__collage-item--top-right {
+  left: 84.72%;
+  top: 19.78%;
+  width: 16.23%;
+  height: 29.89%;
+}
+
+.hero__collage-item--mid-left {
+  left: 0.26%;
+  top: 35.56%;
+  width: 15.69%;
+  height: 28.89%;
+}
+
+.hero__collage-item--mid-right {
+  left: 41.95%;
+  top: 5%;
+  width: 10.44%;
+  height: 19.22%;
+}
+
+.hero__collage-item--bottom-left {
+  left: 24.82%;
+  top: 79.22%;
+  width: 13.52%;
+  height: 24.89%;
+}
+
+.hero__collage-item--bottom-center {
+  left: 56.43%;
+  top: 80.44%;
+  width: 12.79%;
+  height: 23.67%;
+  transform: translateX(-50%);
+}
+
+.hero__collage-item--bottom-right {
+  left: 81.54%;
+  top: 73.89%;
+  width: 15.86%;
+  height: 29.22%;
+}
+
+/* Hover: scale; centered items preserve translateX(-50%) via inline style in JS */
+.hero__collage-item:hover {
+  filter: brightness(1.08);
 }
 
 @media (max-width: 768px) {
   .hero {
-    padding-top: calc(var(--space-4xl) + 80px);
-    text-align: left;
+    padding-top: 32px;
+    padding-bottom: var(--space-5xl);
+  }
+
+  .hero__title {
+    font-size: 48px;
+    line-height: 1.03;
+  }
+
+  .hero__title-line1 {
+    font-size: 28px;
+    line-height: 1.03;
   }
 
   .hero__content {
-    align-items: flex-start;
+    align-items: center;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+  }
+
+  /* Fewer collage images on mobile */
+  .hero__collage-item--top-center,
+  .hero__collage-item--bottom-center {
+    display: none;
   }
 }

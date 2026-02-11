@@ -3,6 +3,7 @@
    ============================================ */
 
 :root {
+  --nav-height: 80px;
   --nav-bg: #1c1e21;
   --nav-bg-mobile: #1a1a1a;
   --nav-dropdown-bg: #030509;
