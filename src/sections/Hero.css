@@ -115,7 +115,6 @@
 
 .hero__collage-item {
   position: absolute;
-  border-radius: var(--radius-md);
   overflow: hidden;
   transition: transform 0.25s ease, filter 0.25s ease;
   pointer-events: auto;
